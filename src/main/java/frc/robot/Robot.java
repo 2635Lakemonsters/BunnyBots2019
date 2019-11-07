@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import org.frcteam2910.common.robot.commands.ZeroFieldOrientedCommand;
+import org.frcteam2910.common.robot.subsystems.SubsystemManager;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -28,13 +31,19 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI oi;
+  private static final double UPDATE_DT = 5e-3; // 5 ms
 
+  public static DrivetrainSubsystem drivetrainSubsystem;
   public static IntakeSubsystem intakeSubsystem;
   public static BedSubsystem bedSubsystem;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  private SubsystemManager subsystemManager;
+
+  HolonomicDriveCommand driveCommand;
+  ZeroFieldOrientedCommand zeroCommand;
 
   IntakeCommand intakeCommand;
   ReverseIntakeCommand reverseIntakeCommand;
@@ -54,21 +63,26 @@ public class Robot extends TimedRobot {
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
+    drivetrainSubsystem = new DrivetrainSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     bedSubsystem = new BedSubsystem();
 
+    subsystemManager = new SubsystemManager(drivetrainSubsystem);
+
     intakeCommand = new IntakeCommand();
     reverseIntakeCommand = new ReverseIntakeCommand();
-
     bedForwardCommand = new BedForwardCommand();
     bedReverseCommand = new BedReverseCommand();
+    zeroCommand = new ZeroFieldOrientedCommand(drivetrainSubsystem);
+    driveCommand = new HolonomicDriveCommand();
     
     oi.intakeButton.whileHeld(intakeCommand);
     oi.reverseIntakeButton.whileHeld(reverseIntakeCommand);
-
     oi.bedForwardButton.toggleWhenPressed(bedForwardCommand);
     oi.bedReverseButton.toggleWhenPressed(bedReverseCommand);
+    oi.referenceResetButton.whenPressed(zeroCommand);
 
+    subsystemManager.enableKinematicLoop(UPDATE_DT);
   }
 
   /**
@@ -139,6 +153,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    zeroCommand.start();
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

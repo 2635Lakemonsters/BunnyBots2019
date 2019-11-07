@@ -44,14 +44,17 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
 
-  Joystick stick = new Joystick(RobotMap.JOYSTICK_CHANNEL);
+  public Joystick rightStick = new Joystick(RobotMap.RIGHT_JOYSTICK_CHANNEL);
+  public Joystick leftStick = new Joystick(RobotMap.LEFT_JOYSTICK_CHANNEL);
+
+  public Button referenceResetButton = new JoystickButton(rightStick, RobotMap.REFERENCE_RESET_BUTTON);
 
 
-  Button intakeButton = new JoystickButton(stick, 1);
-  Button reverseIntakeButton = new JoystickButton(stick, 2);
+  Button intakeButton = new JoystickButton(leftStick, 1);
+  Button reverseIntakeButton = new JoystickButton(leftStick, 2);
 
 
-  Button bedForwardButton = new JoystickButton(stick, 3);
-  Button bedReverseButton = new JoystickButton(stick, 4);
+  Button bedForwardButton = new JoystickButton(leftStick, 3);
+  Button bedReverseButton = new JoystickButton(leftStick, 4);
   
 }
