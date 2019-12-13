@@ -7,17 +7,27 @@
 
 package frc.robot.model;
 
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
+
 /**
  * Add your docs here.
  */
 public class Parameters {
-    public class RobotParameters() {
-         double robotWidth;
-         double robotLength;
-    }
-
-    public class DriveTrainParameters() {
-
-    }
     
 }
+
+// class RobotParameters {
+//     Double robotWidth;
+//     Double robotLength;
+// }
+
+// class DrivetrainParemeters {
+//     final PolymorphicJsonAdapterFactory<DrivetrainParemeters> moshiAdapter = 
+//     PolymorphicJsonAdapterFactory.of(DrivetrainParameters, "drivetrain")
+//         .withSubtype(ArcadeParameters, "arcade")
+
+// }
+
+// class ArcadeParameters implements DrivetrainParameters {
+
+// }
