@@ -163,6 +163,15 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
       }
   }
 
+  public boolean autonomousDriveFinished(Vector2 translation) {
+    Vector2 kinematicPosition = getKinematicPosition();
+    Vector2 Delta = kinematicPosition.subtract(translation);
+    if(Delta.length < 100) 
+        return true;
+    else
+        return false;    
+  }
+
   @Override
   public synchronized void updateKinematics(double timestamp) {
       super.updateKinematics(timestamp);
