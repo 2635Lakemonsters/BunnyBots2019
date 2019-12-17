@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.frcteam2910.common.robot.commands.ZeroFieldOrientedCommand;
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
 
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+
 
 //changes
 //changes
@@ -74,7 +77,7 @@ public class Robot extends TimedRobot {
     bedForwardCommand = new BedForwardCommand();
     bedReverseCommand = new BedReverseCommand();
     zeroCommand = new ZeroFieldOrientedCommand(drivetrainSubsystem);
-    driveCommand = new HolonomicDriveCommand();
+    driveCommand = new HolonomicDriveCommand(DrivetrainSubsystem.ControlMode.DualStick);
     
     oi.intakeButton.whileHeld(intakeCommand);
     oi.reverseIntakeButton.whileHeld(reverseIntakeCommand);

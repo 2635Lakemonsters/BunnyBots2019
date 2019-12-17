@@ -281,10 +281,15 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
 
   @Override
   protected void initDefaultCommand() {
-      setDefaultCommand(new HolonomicDriveCommand());
+      setDefaultCommand(new HolonomicDriveCommand(DrivetrainSubsystem.ControlMode.DualStick));
   }
 
   public TrajectoryFollower<HolonomicDriveSignal> getFollower() {
       return follower;
-  }
+    }
+    public enum ControlMode{
+    DualStick, 
+    SingleStick,
+    Controller
+    };
 }
