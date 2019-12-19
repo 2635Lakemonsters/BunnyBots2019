@@ -45,6 +45,6 @@ public class RobotMap {
   public static final int DRIVETRAIN_BACK_RIGHT_ANGLE_ENCODER = 0;
   public static final int DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR = 1;
 
-  public static final int INTAKE_MOTOR_CHANNEL = 1;
-  public static final int BED_MOTOR_CHANNEL = 2;
+  public static final int INTAKE_MOTOR_CHANNEL = 11;
+  public static final int BED_MOTOR_CHANNEL = 10;
 }

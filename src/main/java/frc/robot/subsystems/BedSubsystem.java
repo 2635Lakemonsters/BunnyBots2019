@@ -25,11 +25,12 @@ public class BedSubsystem extends Subsystem {
   }
 
   public void forward() {
-    bedMotor.set(0.5);
+    System.out.println(" bed subsystem forward");
+    bedMotor.set(1);
   }
 
   public void reverse() {
-    bedMotor.set(-0.5);
+    bedMotor.set(-1);
   }
 
   public void stop() {

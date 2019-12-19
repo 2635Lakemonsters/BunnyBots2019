@@ -27,6 +27,9 @@ public class DriveStraight extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
+        Robot.drivetrainSubsystem.getGyroscope().setAdjustmentAngle(Robot.drivetrainSubsystem.getGyroscope().getUnadjustedAngle());
+        Vector2 position = new Vector2(0, 0);
+        Robot.drivetrainSubsystem.resetKinematics(position, 0);
     	//Robot.drive.reset();
       	//motionParams = MotionMagicLibrary.getDriveParameters(RobotMap.WHEEL_RADIUS_INCHES, distance, velocity, false, acceleration);
     	//Robot.drivetrainSubsystem.motionDriveInit(motionParams);

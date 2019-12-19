@@ -27,7 +27,7 @@ public class AutonomousCommand extends CommandGroup {
     //addSequential(intakeCommand);
     //addSequential(Robot.drivetrainSubsystem.getDefaultCommand());
 
-    Vector2 translation = new Vector2(0, 1000);
+    Vector2 translation = new Vector2(-500, 0);
     DriveStraight driveStraight = new DriveStraight(translation);
     addSequential(driveStraight);
 

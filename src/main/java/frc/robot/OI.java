@@ -47,14 +47,14 @@ public class OI {
   public Joystick rightStick = new Joystick(RobotMap.RIGHT_JOYSTICK_CHANNEL);
   public Joystick leftStick = new Joystick(RobotMap.LEFT_JOYSTICK_CHANNEL);
 
-  public Button referenceResetButton = new JoystickButton(rightStick, RobotMap.REFERENCE_RESET_BUTTON);
+  public Button referenceResetButton = new JoystickButton(leftStick, 8);
 
 
   Button intakeButton = new JoystickButton(leftStick, 1);
   Button reverseIntakeButton = new JoystickButton(leftStick, 2);
 
 
-  Button bedForwardButton = new JoystickButton(leftStick, 3);
+  Button bedForwardButton = new JoystickButton(leftStick, 5);
   Button bedReverseButton = new JoystickButton(leftStick, 4);
   
 }

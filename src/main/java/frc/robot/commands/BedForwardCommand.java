@@ -26,6 +26,7 @@ public class BedForwardCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    System.out.println("executing bed forward");
     Robot.bedSubsystem.forward();
   }
 
