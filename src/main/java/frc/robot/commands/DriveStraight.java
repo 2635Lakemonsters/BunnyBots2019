@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 public class DriveStraight extends Command {
   Vector2 translation;
   
-    public DriveStraight(Vector2 translation) {
-        super(3000.0);
+    public DriveStraight(Vector2 translation, double timeout) {
+        super(timeout);
         requires(Robot.drivetrainSubsystem);
         this.translation = translation;
         // Use requires() here to declare subsystem dependencies
@@ -51,12 +51,16 @@ public class DriveStraight extends Command {
     }
     
     @Override protected boolean isFinished() {
-    	
+        
+        if(isTimedOut()){
+            System.out.println("Timed Out");
+        }
     	boolean isFinished = isTimedOut();
     	if (!isFinished)
         isFinished = Robot.drivetrainSubsystem.autonomousDriveFinished(translation);      
         
     	if(isFinished) {
+            Robot.drivetrainSubsystem.stop();
 //    		double currentHeading = Robot.drive.getNavxHeading();
 //    		double navxHeading = Math.abs(intialHeading-currentHeading);
 //    		System.out.println("Navx straight heading:" + navxHeading);

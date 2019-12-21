@@ -32,7 +32,7 @@ import frc.robot.subsystems.*;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI oi;
   private static final double UPDATE_DT = 5e-3; // 5 ms
 
@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
+    //m_chooser.setDefaultOption("Default Auto", new AutonomousCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
@@ -127,6 +127,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    
     //m_autonomousCommand = m_chooser.getSelected();
 
     m_autonomousCommand = new AutonomousCommand();

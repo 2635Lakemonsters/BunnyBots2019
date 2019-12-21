@@ -18,15 +18,17 @@ public class HolonomicDriveCommand extends Command {
   ControlMode mode;
 
   public HolonomicDriveCommand(ControlMode mode) {
-    this.mode = mode;
     requires(Robot.drivetrainSubsystem);
+    this.mode = mode;
+    
 }
 
 @Override
 protected void execute() {
   double forward = 0;
   double strafe = 0;
-  double rotation = 0;
+  double rotation = 0;      
+
   //boolean ignoreScalars = Robot.oi.primaryController.getforwardBumperButton().get();
   switch(mode) {
     case DualStick: 
