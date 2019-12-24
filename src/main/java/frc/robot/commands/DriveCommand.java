@@ -33,7 +33,7 @@ public class DriveCommand extends Command {
 
   @Override
   protected void end() {
-      Robot.drivetrainSubsystem.holonomicDrive(Vector2.ZERO, 0.0);
+      Robot.drivetrainSubsystem.holonomicDrive(Vector2.ZERO,  0.0, true);
   }
 
   @Override

@@ -25,11 +25,11 @@ public class IntakeSubsystem extends Subsystem {
   }
 
   public void forward() {
-    intakeMotor.set(0.5); 
+    intakeMotor.set(0.75); 
   }
 
   public void reverse() {
-    intakeMotor.set(-0.5);
+    intakeMotor.set(-0.75);
   }
 
   public void spinOff() {

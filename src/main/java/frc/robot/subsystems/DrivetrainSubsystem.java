@@ -24,6 +24,13 @@ import org.frcteam2910.common.robot.subsystems.SwerveDrivetrain;
 import org.frcteam2910.common.util.DrivetrainFeedforwardConstants;
 import org.frcteam2910.common.util.HolonomicDriveSignal;
 import org.frcteam2910.common.util.HolonomicFeedforward;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -51,6 +58,9 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
           new CentripetalAccelerationConstraint(25.0 * 12.0)
   };    
 
+  public boolean isRecordingDrive;
+  public ArrayList<Vector2> translationLog;
+  public ArrayList<Double> rotationLog;
   private static final double BACK_RIGHT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-281); //272
   private static final double BACK_LEFT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-346); //346
   private static final double FRONT_RIGHT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-331); //331
@@ -91,6 +101,10 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
   private Trajectory.Segment segment = null;
 
   public DrivetrainSubsystem() {
+
+    translationLog = new ArrayList<Vector2>();
+    rotationLog = new ArrayList<Double>();
+
       double frontLeftAngleOffset = FRONT_LEFT_ANGLE_OFFSET_COMPETITION;
       double frontRightAngleOffset = FRONT_RIGHT_ANGLE_OFFSET_COMPETITION;
       double backLeftAngleOffset = BACK_LEFT_ANGLE_OFFSET_COMPETITION;
@@ -157,7 +171,13 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
 
   @Override
   public void holonomicDrive(Vector2 translation, double rotation, boolean fieldOriented) {
-      //System.out.println("Subsystem.holonimicDrive" + translation + " " + rotation);
+      translationLog.add(translation);
+      rotationLog.add(rotation);
+      if(isRecordingDrive){
+    
+       translationLog.add(translation);
+       rotationLog.add(rotation);
+      }
       synchronized (lock) {
           this.signal = new HolonomicDriveSignal(translation, rotation, fieldOriented);
       }
@@ -165,16 +185,73 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
 
   public boolean autonomousDriveFinished(Vector2 translation) {
     Vector2 kinematicPosition = getKinematicPosition();
+
     Vector2 Delta = kinematicPosition.subtract(translation);
     
-    System.out.println("Delta.length: " + Delta.length);
-    System.out.println("kinematicPosition: " + kinematicPosition);
+    //System.out.println("Delta.length: " + Delta.length);
+    //System.out.println("kinematicPosition: " + kinematicPosition);
+    
 
-    if(Delta.length < 100) 
+    if(Delta.length < 50) 
         return true;
     else
         return false;    
   }
+
+  public  void writeDriveLog() throws IOException {
+
+    System.out.println("Writing Logfiles");
+    FileWriter fw = new FileWriter("/home/lvuser/drive.log");
+    for (int i=0; i < translationLog.size(); i++) {
+      Vector2 translation = translationLog.get(i);
+      fw.write(translation.x + "," + translation.y + "," + rotationLog.get(i) + "\n");
+    }
+    fw.close();
+
+
+    FileWriter fw2 = new FileWriter("/home/lvuser/rotations.log");
+    for (int i=0; i < rotationLog.size(); i++) {
+      Double rotation = rotationLog.get(i);
+      fw2.write("rotations.add(" + rotation + ");");
+    }
+    fw2.close();
+  }
+
+public static ArrayList<HolonomicDriveSignal> readDriveRecording(String fileName, boolean isFieldOriented) {
+    ArrayList<HolonomicDriveSignal> driveRecording = new ArrayList<HolonomicDriveSignal>();
+    
+    try
+    {
+        File file = new File(fileName); 
+        BufferedReader br = new BufferedReader(new FileReader(file)); 
+        
+        String line; 
+        int lineIndex = 0;
+        while ((line = br.readLine()) != null) {
+            lineIndex++;
+            String[] recordStr = line.split(",", 0);
+            if (recordStr.length == 3) {
+                Double x = Double.valueOf(recordStr[0]);
+                Double y = Double.valueOf(recordStr[1]);
+                Double rotation = Double.valueOf(recordStr[2]);
+
+                Vector2 translation = new Vector2(x,y);
+
+                driveRecording.add(new HolonomicDriveSignal(translation, rotation, isFieldOriented));
+
+            } else {
+                throw new Exception("Error reading drive file on line " + lineIndex );
+            }
+
+        } 
+        br.close();
+    }
+    catch(Exception err) {
+        System.out.println("Error reading drive file:" + fileName);
+        System.out.println(err.getMessage());
+    }
+    return driveRecording;
+}
 
   @Override
   public synchronized void updateKinematics(double timestamp) {
@@ -221,6 +298,7 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
 
           localSignal = new HolonomicDriveSignal(localSignal.getTranslation(),
                   snapRotationController.calculate(getGyroscope().getAngle().toRadians(), dt),
+
                   localSignal.isFieldOriented());
       } else {
           synchronized (lock) {

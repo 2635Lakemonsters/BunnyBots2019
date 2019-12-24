@@ -7,10 +7,14 @@
 
 package frc.robot.commands;
 
+import java.util.ArrayList;
+
 import org.frcteam2910.common.math.Vector2;
+import org.frcteam2910.common.util.HolonomicDriveSignal;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.Robot;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class AutonomousCommand extends CommandGroup {
   /**
@@ -23,15 +27,11 @@ public class AutonomousCommand extends CommandGroup {
     // addSequential(new Command2());
     // these will run in order.
 
-    //IntakeCommand intakeCommand = new IntakeCommand();
-    //addSequential(intakeCommand);
-    //addSequential(Robot.drivetrainSubsystem.getDefaultCommand());
+    ArrayList<HolonomicDriveSignal> driveSequence = DrivetrainSubsystem.readDriveRecording("/home/lvuser/driveSequences/driveStraight.log", true);
+ 
+    AutonomousDriveCommand autonomousDriveCmd = new AutonomousDriveCommand(driveSequence, 13);
+    addSequential(autonomousDriveCmd);
 
-    Vector2 translation = new Vector2(-5, 0);
-    DriveStraight driveStraight = new DriveStraight(translation, 400);
-    DriveStraight driveStop = new DriveStraight(new Vector2(6, 0), 1000);
-    addSequential(driveStraight);
-    addSequential(driveStop);
 
     //DriveCommand driveCommand = new DriveCommand(translation, rotation, fieldOriented);
 

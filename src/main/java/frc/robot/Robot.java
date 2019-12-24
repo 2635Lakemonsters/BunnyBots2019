@@ -7,8 +7,12 @@
 
 package frc.robot;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.commands.ZeroFieldOrientedCommand;
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
 
@@ -50,6 +54,7 @@ public class Robot extends TimedRobot {
 
   IntakeCommand intakeCommand;
   ReverseIntakeCommand reverseIntakeCommand;
+  ToggleDriveRecordCommand recordCommand;
 
   BedForwardCommand bedForwardCommand;
   BedReverseCommand bedReverseCommand;
@@ -74,6 +79,7 @@ public class Robot extends TimedRobot {
 
     intakeCommand = new IntakeCommand();
     reverseIntakeCommand = new ReverseIntakeCommand();
+    recordCommand = new ToggleDriveRecordCommand();
     bedForwardCommand = new BedForwardCommand();
     bedReverseCommand = new BedReverseCommand();
     zeroCommand = new ZeroFieldOrientedCommand(drivetrainSubsystem);
@@ -82,10 +88,12 @@ public class Robot extends TimedRobot {
     oi.intakeButton.whileHeld(intakeCommand);
     oi.reverseIntakeButton.whileHeld(reverseIntakeCommand);
     oi.bedForwardButton.toggleWhenPressed(bedForwardCommand);
+    oi.toggleDriveRecordButton.toggleWhenPressed(recordCommand);
+
     oi.bedReverseButton.toggleWhenPressed(bedReverseCommand);
     oi.referenceResetButton.whenPressed(zeroCommand);
 
-    subsystemManager.enableKinematicLoop(UPDATE_DT);
+
   }
 
   /**
@@ -107,7 +115,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    subsystemManager.disableKinematicLoop();
+ 
+
+    
   }
+
+  
 
   @Override
   public void disabledPeriodic() {
@@ -128,6 +142,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
+    subsystemManager.enableKinematicLoop(UPDATE_DT);
+    zeroCommand.start();
     //m_autonomousCommand = m_chooser.getSelected();
 
     m_autonomousCommand = new AutonomousCommand();
@@ -159,11 +175,12 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    zeroCommand.start();
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    subsystemManager.enableKinematicLoop(UPDATE_DT);
+    zeroCommand.start();
   }
 
   /**
