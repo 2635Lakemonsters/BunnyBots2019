@@ -7,14 +7,27 @@
 
 package frc.robot.commands;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.util.HolonomicDriveSignal;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.Robot;
 import frc.robot.subsystems.DrivetrainSubsystem;
+
+//-------------------------------------
+//Swerve Drive Experiment Imports BEGIN
+//-------------------------------------
+import frc.lib.motion_profiling.Autonomi;
+//-------------------------------------
+//Swerve Drive Experiment Imports END
+//-------------------------------------
+import frc.lib.motion_profiling.Autonomous;
 
 public class AutonomousCommand extends CommandGroup {
   /**
@@ -22,29 +35,46 @@ public class AutonomousCommand extends CommandGroup {
    */
   public AutonomousCommand() {
     requires(Robot.drivetrainSubsystem);
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
 
-    ArrayList<HolonomicDriveSignal> driveSequence = DrivetrainSubsystem.readDriveRecording("/home/lvuser/driveSequences/driveStraight.log", true);
- 
+    //-------------------------------------
+    //Swerve Drive Experiment  BEGIN
+    //-------------------------------------
+
+   
+
+    // try {
+
+    //   String jsonString = new String(Files.readAllBytes(Paths.get("/home/lvuser/autonomi.json") ));
+    //   Autonomi pathfollow = Autonomi.fromJsonString(jsonString);
+    //   //System.out.println("Autonomi cache loaded.");
+    //   if (pathfollow != null && pathfollow.mapAutonomous != null) {
+
+    //     // using iterators 
+    //     Iterator<Map.Entry<String, Autonomous>> itr = pathfollow.mapAutonomous.entrySet().iterator(); 
+              
+    //     while(itr.hasNext()) 
+    //     { 
+    //         Map.Entry<String, Autonomous> entry = itr.next(); 
+    //         System.out.println("Key = " + entry.getKey() +  ", Value = " + entry.getValue().name); 
+    //     } 
+    //   }
+
+      
+    // } catch (Exception err) {
+    //    System.out.println("Autonomi load failed: " + err.getMessage());
+     
+    // }
+
+
+
+
+    ArrayList<HolonomicDriveSignal> driveSequence = DrivetrainSubsystem.readDriveRecording("/home/lvuser/driveSequences/driveStraight.log", true); 
     AutonomousDriveCommand autonomousDriveCmd = new AutonomousDriveCommand(driveSequence, 13);
     addSequential(autonomousDriveCmd);
 
 
     //DriveCommand driveCommand = new DriveCommand(translation, rotation, fieldOriented);
 
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
 
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
   }
 }

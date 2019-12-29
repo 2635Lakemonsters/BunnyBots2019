@@ -8,15 +8,17 @@ import java.util.ArrayList;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.util.HolonomicDriveSignal;
 
+
+
 /**
  *
  */
-public class AutonomousDriveCommand extends Command {
+public class AutonomousPathFollowCommand extends Command {
     ArrayList<HolonomicDriveSignal> driveSequence;
     int index;
  
   
-    public AutonomousDriveCommand(ArrayList<HolonomicDriveSignal> driveSequence, double timeout) {
+    public AutonomousPathFollowCommand(ArrayList<HolonomicDriveSignal> driveSequence, double timeout) {
         super(timeout);
         requires(Robot.drivetrainSubsystem);
         this.driveSequence = driveSequence;
