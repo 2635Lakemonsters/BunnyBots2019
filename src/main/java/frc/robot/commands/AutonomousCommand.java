@@ -28,6 +28,7 @@ import frc.lib.motion_profiling.Autonomi;
 //Swerve Drive Experiment Imports END
 //-------------------------------------
 import frc.lib.motion_profiling.Autonomous;
+import frc.lib.motion_profiling.Path2D;
 
 public class AutonomousCommand extends CommandGroup {
   /**
@@ -39,8 +40,6 @@ public class AutonomousCommand extends CommandGroup {
     //-------------------------------------
     //Swerve Drive Experiment  BEGIN
     //-------------------------------------
-
-   
 
     // try {
 
@@ -56,6 +55,14 @@ public class AutonomousCommand extends CommandGroup {
     //     { 
     //         Map.Entry<String, Autonomous> entry = itr.next(); 
     //         System.out.println("Key = " + entry.getKey() +  ", Value = " + entry.getValue().name); 
+    //         Map<String, Path2D> paths = entry.getValue().paths;
+    //         Iterator<Map.Entry<String, Path2D>> pathItr = paths.entrySet().iterator(); 
+    //         while (pathItr.hasNext()) {
+    //           Map.Entry<String, Path2D> currentPath = pathItr.next();
+              
+    //           System.out.println("pathName: " + currentPath.getValue().name);
+    //         }
+
     //     } 
     //   }
 
@@ -68,10 +75,12 @@ public class AutonomousCommand extends CommandGroup {
 
 
 
-    ArrayList<HolonomicDriveSignal> driveSequence = DrivetrainSubsystem.readDriveRecording("/home/lvuser/driveSequences/driveStraight.log", true); 
-    AutonomousDriveCommand autonomousDriveCmd = new AutonomousDriveCommand(driveSequence, 13);
-    addSequential(autonomousDriveCmd);
+    // ArrayList<HolonomicDriveSignal> driveSequence = DrivetrainSubsystem.readDriveRecording("/home/lvuser/driveSequences/driveStraight.log", true); 
+    // AutonomousDriveCommand autonomousDriveCmd = new AutonomousDriveCommand(driveSequence, 13);
+    // addSequential(autonomousDriveCmd);
 
+    AutonomousTrajectoryCommand trajectorCommand = new AutonomousTrajectoryCommand(4);
+    addSequential(trajectorCommand);
 
     //DriveCommand driveCommand = new DriveCommand(translation, rotation, fieldOriented);
 

@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-
+import frc.lib.motion_profiling.Path2D;
 import frc.robot.Mk2SwerveModule;
 import frc.robot.RobotMap;
 import frc.robot.commands.HolonomicDriveCommand;
@@ -58,9 +58,21 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
           new CentripetalAccelerationConstraint(25.0 * 12.0)
   };    
 
+  //Properties used by the "ToggleDriveRecordCommand" (Left Joystick Button 10)
   public boolean isRecordingDrive;
   public ArrayList<Vector2> translationLog;
   public ArrayList<Double> rotationLog;
+
+  //Properties used for Path following.
+  private static Vector2 prevPosition = new Vector2(0.0D, 0.0D);
+  private static Vector2 prevPathPosition = new Vector2(0.0D, 0.0D);
+  private static double prevTime;
+  private static double prevPathHeading;
+  //private val poseHistory = InterpolatingTreeMap<InterpolatingDouble, SwerveDrive.Pose>(75)
+
+
+
+
   private static final double BACK_RIGHT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-281); //272
   private static final double BACK_LEFT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-346); //346
   private static final double FRONT_RIGHT_ANGLE_OFFSET_COMPETITION = Math.toRadians(-331); //331
@@ -252,6 +264,72 @@ public static ArrayList<HolonomicDriveSignal> readDriveRecording(String fileName
     }
     return driveRecording;
 }
+
+
+//  public void driveAlongPath(Path2D path, Double extraTime, Boolean resetOdometry) {
+//     println("Driving along path ${path.name}, duration: ${path.durationWithSpeed}, travel direction: ${path.robotDirection}, mirrored: ${path.isMirrored}")
+
+//     if (resetOdometry) {
+//         System.out.println("Position = $position Heading = $heading");
+//         resetOdometry();
+
+//         // set to the numbers required for the start of the path
+//         position = path.getPosition(0.0);
+//         heading = path.getTangent(0.0).angle.degrees + path.headingCurve.getValue(0.0).degrees;
+//         System.out.println("After Reset Position = " + position + "Heading = " + heading);
+//     }
+//     double prevTime = 0.0;
+
+//     TImer timer = new Timer();
+//     timer.start();
+//     prevPathPosition = path.getPosition(0.0);
+//     periodic {
+//         double t = timer.get();
+//         double dt = t - prevTime;
+
+
+//         // position error
+//         Vector2 pathPosition = path.getPosition(t);
+//         val positionError = pathPosition - position;
+//         //println("pathPosition=$pathPosition position=$position positionError=$positionError")
+
+//         // position feed forward
+//         double pathVelocity = (pathPosition - prevPathPosition)/dt;
+//         prevPathPosition = pathPosition;
+
+//         frc.lib.math.Vector2 translationControlField = pathVelocity * parameters.kPositionFeedForward + positionError * parameters.kPosition;
+
+//         // heading error
+//         double robotHeading = heading;
+//         double pathHeadingRadiansDouble = path.getTangent(t).angle + path.headingCurve.getValue(t);
+//         double pathHeading = pathHeadingRadiansDouble.radians;
+//         double headingError = (pathHeading - robotHeading).wrap();
+//         //println("GyroHeading=$robotHeading PathHeading=$pathHeading AngleError=$angleError")
+
+//         // heading feed forward
+//         double headingVelocity = (pathHeading.asDegrees - prevPathHeading.asDegrees)/dt;
+//         prevPathHeading = pathHeading;
+
+//         double turnControl = headingVelocity * parameters.kHeadingFeedForward + headingError.asDegrees * parameters.kHeading;
+
+//         // send it
+//         holonomicDrive(translationControlField, turnControl, true);
+
+//         // are we done yet?
+//         if (t >= path.durationWithSpeed + extraTime) {
+//            stop();
+//         }
+
+
+//         prevTime = t;
+
+//         //        println("Time=$t Path Position=$pathPosition Position=$position")
+//         //        println("DT$dt Path Velocity = $pathVelocity Velocity = $velocity")
+//     }
+
+//     // shut it down
+//     holonomicDrive(Vector2.ZERO, 0.0, true);
+// }
 
   @Override
   public synchronized void updateKinematics(double timestamp) {
